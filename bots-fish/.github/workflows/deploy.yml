@@ -26,10 +26,10 @@ jobs:
             # 3. Убиваем старые процессы ботов, чтобы не было клонов
             # (команда  true нужна, чтобы скрипт не выдал ошибку, если бот уже был выключен)
             pkill -f "/root/bots-fish/bots-fish/bot1/bot.py"  true
-            pkill -f "/root/bots-fish/bots-fish/bot2/bot1.py" || true
+            pkill -f "/root/bots-fish/bots-fish/bot2/bot2.py" || true
             
             # 4. Запускаем первого бота напрямую через venv в фоновом режиме
             nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot1/bot.py > /root/bots-fish/bots-fish/bot1/log.txt 2>&1 &
             
             # 5. Запускаем второго бота напрямую через venv в фоновом режиме
-            nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot2/bot1.py > /root/bots-fish/bots-fish/bot2/log.txt 2>&1 &
+            nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot2/bot2.py > /root/bots-fish/bots-fish/bot2/log.txt 2>&1 &
