@@ -17,7 +17,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Отправка фото с подписью и кнопкой
     await context.bot.send_photo(
         chat_id=chat_id,
-        photo=open('C:/Users/Administrator/Desktop/ГЕТКА/photo_2025-12-07_02-35-39.jpg', 'rb'),  # Замените на путь к вашей картинке
+        photo=open('photo_2025-12-07_02-35-39.jpg', 'rb'),  # Замените на путь к вашей картинке
         caption=caption,
         parse_mode=ParseMode.HTML,
     )
@@ -43,4 +43,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
