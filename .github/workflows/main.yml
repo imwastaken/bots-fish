@@ -17,21 +17,23 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            # 1. Заходим в папку
+            # 1. Заходим в главную папку
             cd /root/bots-fish/bots-fish
             
-            # 2. Убиваем старых ботов точно по их номерам (если файлы существуют)
+            # 2. Убиваем старых ботов по их сохраненным номерам
             if [ -f bot1.pid ]; then kill -9 $(cat bot1.pid) 2>/dev/null || true; fi
             if [ -f bot2.pid ]; then kill -9 $(cat bot2.pid) 2>/dev/null || true; fi
             
-            # 3. Качаем обновления
+            # 3. Качаем обновления кода с гитхаба
             git fetch --all
             git reset --hard origin/main
             
-            # 4. Запускаем 1-го бота и сразу сохраняем его номер в файл bot1.pid
-            nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot1/bot.py < /dev/null > /root/bots-fish/bots-fish/bot1/log.txt 2>&1 &
-            echo $! > bot1.pid
+            # 4. Заходим в папку ПЕРВОГО бота и запускаем его оттуда
+            cd /root/bots-fish/bots-fish/bot1
+            nohup /root/bots-fish/bots-fish/venv/bin/python bot.py < /dev/null > log.txt 2>&1 &
+            echo $! > /root/bots-fish/bots-fish/bot1.pid
             
-            # 5. Запускаем 2-го бота и сохраняем его номер в файл bot2.pid
-            nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot2/bot2.py < /dev/null > /root/bots-fish/bots-fish/bot2/log.txt 2>&1 &
-            echo $! > bot2.pid
+            # 5. Заходим в папку ВТОРОГО бота и запускаем его оттуда
+            cd /root/bots-fish/bots-fish/bot2
+            nohup /root/bots-fish/bots-fish/venv/bin/python bot2.py < /dev/null > log.txt 2>&1 &
+            echo $! > /root/bots-fish/bots-fish/bot2.pid
