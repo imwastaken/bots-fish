@@ -1,17 +1,35 @@
-script: |
-            # 1. Заходим в папку с репозиторием
+name: Авто-обновление ботов
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Обновление и перезапуск
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            # 1. Заходим в папку с ботами
             cd /root/bots-fish/bots-fish
             
-            # 2. ЖЕСТКО сбрасываем локальные изменения и качаем с гитхаба
+            # 2. Жестко сбрасываем конфликты и качаем свежий код
             git fetch --all
             git reset --hard origin/main
             
-            # 3. Убиваем старые процессы ботов (упростил команду без кавычек)
-            pkill -f bot1/bot.py  true
-            pkill -f bot2/bot2.py  true
+            # 3. Убиваем старых ботов (добавил кавычки для надежности)
+            pkill -f "bot1/bot.py" || true
+            pkill -f "bot2/bot2.py" || true
             
             # 4. Запускаем первого бота
             nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot1/bot.py > /root/bots-fish/bots-fish/bot1/log.txt 2>&1 &
             
-            # 5. Запускаем второго бота
+            # 5. Запускаем второго бота (исправил имя файла на bot2.py)
             nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot2/bot2.py > /root/bots-fish/bots-fish/bot2/log.txt 2>&1 &
