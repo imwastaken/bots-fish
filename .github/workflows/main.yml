@@ -17,19 +17,19 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            # 1. Заходим в папку с ботами
+            # 1. Заходим в папку
             cd /root/bots-fish/bots-fish
             
-            # 2. Жестко сбрасываем конфликты и качаем свежий код
+            # 2. Жестко качаем обновления
             git fetch --all
             git reset --hard origin/main
             
-            # 3. Убиваем старых ботов (добавил кавычки для надежности)
-            pkill -f "bot1/bot.py" || true
-            pkill -f "bot2/bot2.py" || true
+            # 3. Убиваем старых ботов. Трюк со скобками [b] нужен, чтобы скрипт не убил сам себя!
+            pkill -f "[b]ot1/bot.py" || true
+            pkill -f "[b]ot2/bot2.py" || true
             
-            # 4. Запускаем первого бота
-            nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot1/bot.py > /root/bots-fish/bots-fish/bot1/log.txt 2>&1 &
+            # 4. Запускаем первого бота (добавил < /dev/null для правильного фона)
+            nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot1/bot.py < /dev/null > /root/bots-fish/bots-fish/bot1/log.txt 2>&1 &
             
-            # 5. Запускаем второго бота (исправил имя файла на bot2.py)
-            nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot2/bot2.py > /root/bots-fish/bots-fish/bot2/log.txt 2>&1 &
+            # 5. Запускаем второго бота
+            nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot2/bot2.py < /dev/null > /root/bots-fish/bots-fish/bot2/log.txt 2>&1 &
