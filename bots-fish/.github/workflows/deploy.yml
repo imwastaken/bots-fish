@@ -1,1 +1,35 @@
+name: Авто-обновление ботов
 
+on:
+  push:
+    branches:
+      - main  # Замени на master, если твоя ветка называется master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Обновление и перезапуск
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            # 1. Заходим в папку с репозиторием
+            cd /root/bots-fish/bots-fish
+            
+            # 2. Скачиваем свежий код с гитхаба
+            git pull origin main
+            
+            # 3. Убиваем старые процессы ботов, чтобы не было клонов
+            # (команда  true нужна, чтобы скрипт не выдал ошибку, если бот уже был выключен)
+            pkill -f "/root/bots-fish/bots-fish/bot1/bot.py"  true
+            pkill -f "/root/bots-fish/bots-fish/bot2/bot1.py" || true
+            
+            # 4. Запускаем первого бота напрямую через venv в фоновом режиме
+            nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot1/bot.py > /root/bots-fish/bots-fish/bot1/log.txt 2>&1 &
+            
+            # 5. Запускаем второго бота напрямую через venv в фоновом режиме
+            nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot2/bot1.py > /root/bots-fish/bots-fish/bot2/log.txt 2>&1 &
