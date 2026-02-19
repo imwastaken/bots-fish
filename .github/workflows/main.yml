@@ -20,16 +20,18 @@ jobs:
             # 1. Заходим в папку
             cd /root/bots-fish/bots-fish
             
-            # 2. Жестко качаем обновления
+            # 2. Убиваем старых ботов точно по их номерам (если файлы существуют)
+            if [ -f bot1.pid ]; then kill -9 $(cat bot1.pid) 2>/dev/null || true; fi
+            if [ -f bot2.pid ]; then kill -9 $(cat bot2.pid) 2>/dev/null || true; fi
+            
+            # 3. Качаем обновления
             git fetch --all
             git reset --hard origin/main
             
-            # 3. Убиваем старых ботов. Трюк со скобками [b] нужен, чтобы скрипт не убил сам себя!
-            pkill -f "[b]ot1/bot.py" || true
-            pkill -f "[b]ot2/bot2.py" || true
-            
-            # 4. Запускаем первого бота (добавил < /dev/null для правильного фона)
+            # 4. Запускаем 1-го бота и сразу сохраняем его номер в файл bot1.pid
             nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot1/bot.py < /dev/null > /root/bots-fish/bots-fish/bot1/log.txt 2>&1 &
+            echo $! > bot1.pid
             
-            # 5. Запускаем второго бота
+            # 5. Запускаем 2-го бота и сохраняем его номер в файл bot2.pid
             nohup /root/bots-fish/bots-fish/venv/bin/python /root/bots-fish/bots-fish/bot2/bot2.py < /dev/null > /root/bots-fish/bots-fish/bot2/log.txt 2>&1 &
+            echo $! > bot2.pid
