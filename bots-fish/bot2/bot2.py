@@ -4,7 +4,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes
 from telegram.constants import ParseMode
 
 # Вставьте сюда токен вашего бота от BotFather
-BOT_TOKEN = "8503683358:AAGnNwdk5dRt8jBIbK9Kbb4cgi2yoI5ZSaU"
+BOT_TOKEN = "8587258203:AAFrVyRDLzKK8w3bhAHPW-Fck0vChdPxW_A"
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -43,6 +43,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
